@@ -1,5 +1,7 @@
-import os
+import google.cloud.logging
+import json
 import logging
+import os
 import math
 import requests
 
@@ -9,6 +11,7 @@ API_KEY         = "GITHUB_API_KEY"
 PR_NUMBER       = "GITHUB_PR_NUMBER"
 REPO            = "GITHUB_REPO"
 REPO_OWNER      = "GITHUB_REPO_OWNER"
+LOG_NAME        = "DEPLOY_LOG_NAME"
 
 API_URL = "https://api.github.com"
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
@@ -23,7 +26,7 @@ def call_github_api(url):
     "Accept": "application/vnd.github.v3+json",
     "Authorization": f"token {os.environ[API_KEY]}"
   }
-  
+
   return requests.get(url, headers=headers).json()
 
 def get_change_sets(commits):
@@ -50,6 +53,7 @@ def get_pull_request_data(owner, repo, pr_nbr):
 
   return {
     "repo": repo,
+    "pullRequest": pr_nbr,
     "branch": target_branch,
     "changeSets": change_sets,
     "leadTimeMinutes": math.floor(time_delta.total_seconds() / 60)
@@ -58,13 +62,18 @@ def get_pull_request_data(owner, repo, pr_nbr):
 def log_metrics(request):
   check_env_vars([API_KEY, REPO, REPO_OWNER])
 
+  client = google.cloud.logging.Client()
+  log_name = os.environ[LOG_NAME] if LOG_NAME in os.environ else "python_deployment_logger"
+  cloud_logger = client.logger(log_name)
+
   owner = os.environ[REPO_OWNER]
   repo = os.environ[REPO]
   pr = os.environ[PR_NUMBER]
 
   build_data = get_pull_request_data(owner, repo, pr)
 
-  print(build_data)
+  print('payload='+json.dumps(build_data, indent=2, sort_keys=False))
+  cloud_logger.log_struct(build_data, severity="INFO")
 
 if __name__ == "__main__":
     log_metrics(None)
