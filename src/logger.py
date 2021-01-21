@@ -20,6 +20,7 @@ def check_env_vars(vars):
   for var in vars:
     if not os.environ[var]:
       logging.exception(f"Required env var '{var}' not set")
+      exit(1)
 
 def call_github_api(url):
   headers = {
@@ -44,8 +45,12 @@ def get_change_sets(commits):
 def get_pull_request_data(owner, repo, pr_nbr):
   pullsUrl = f"{API_URL}/repos/{owner}/{repo}/pulls/{pr_nbr}"
 
-  pull_request = call_github_api(pullsUrl) 
-  target_branch = pull_request["base"]["ref"]
+  pull_request = call_github_api(pullsUrl)
+  try:
+    target_branch = pull_request["base"]["ref"]
+  except KeyError:
+    logging.exception(f"Pull request not found: {pull_request}")
+    exit(2)
   time_delta = datetime.now() - datetime.strptime(pull_request["created_at"], DATE_FORMAT)
 
   commits = call_github_api(f"{pullsUrl}/commits")
