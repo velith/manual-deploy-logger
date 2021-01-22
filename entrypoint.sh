@@ -27,7 +27,7 @@ export GITHUB_PR_NUMBER="${INPUT_GITHUB_PULL_NUMBER}"
 export GITHUB_REPO="${GITHUB_REPOSITORY##*/}"
 export GITHUB_REPO_OWNER="${GITHUB_REPOSITORY%%/*}"
 
-output=$(python logger.py ${*} 2>&1)
+output=$(python /code/src/logger.py ${*} 2>&1)
 exitCode=${?}
 
 echo "${output}"
