@@ -28,6 +28,6 @@ It assumes that you are using Github Pull Requests. Use the action during an aut
 
     uses: velith/deploy-logger@master
     with:
-      github_api_key: ${{ secrets.GITHUB_API_KEY }}
+      github_api_key: ${{ secrets.GH_API_KEY }}
       github_pull_number: ${{ github.event.number }}
       gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
