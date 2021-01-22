@@ -8,7 +8,7 @@ else
 fi
 
 if [ -n "${INPUT_GCP_SA_KEY}" ]; then
-  echo "${INPUT_GCP_SA_KEY}" > /opt/gcp_key.json
+  echo "${INPUT_GCP_SA_KEY}" | base64 -d > /opt/gcp_key.json
   export GOOGLE_APPLICATION_CREDENTIALS=/opt/gcp_key.json
 else
   echo "Input gcp_sa_key cannot be empty"
