@@ -16,4 +16,4 @@ inputs:
     required: false
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/velith/manual-deploy-logger:v1.0.0'
