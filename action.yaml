@@ -5,15 +5,15 @@ inputs:
   github_api_key:
     description: 'Secret access token to use for Github API'
     required: true
-  github_pull_number:
-    description: 'The pull request number that triggered a build'
-    required: true
   gcp_sa_key:
     descritpion: 'Secret key for a GCP service account'
+    required: true
+  branch:
+    description: 'Branch deployment is made from'
     required: true
   log_name:
     description: 'Optional name for Stackdriver logs '
     required: false
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/velith/deploy-logger:v1.0.5'
+  image: 'Dockerfile'
