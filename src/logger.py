@@ -73,8 +73,6 @@ def get_commits_data(owner, repo, branch):
 
   commits = get_all_commits(commitsUrl, branch, since)
 
-  print(f"commit list length: {len(commits)}")
-
   pull_request_lead_times = dict()
   change_sets = []
   now = datetime.now()
@@ -117,7 +115,7 @@ def log_metrics(request):
 
   build_data = get_commits_data(owner, repo, branch)
 
-  #print('payload='+json.dumps(build_data, indent=2, sort_keys=False))
+  print('payload='+json.dumps(build_data, indent=2, sort_keys=False))
   cloud_logger.log_struct(build_data, severity="INFO")
 
 if __name__ == "__main__":
