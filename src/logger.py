@@ -35,7 +35,7 @@ def call_github_api(url):
 def get_latest_tag(tagsUrl):
   try:
     tags = call_github_api(tagsUrl)
-    return tags[1]["name"]
+    return tags[0]["name"]
   except KeyError:
     logging.exception(f"Malformed response from tags: {tags}")
     exit(2)
